@@ -1,0 +1,1 @@
+This folder contains command line tools for understanding GDELT data.
