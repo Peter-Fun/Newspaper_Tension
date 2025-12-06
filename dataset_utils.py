@@ -5,7 +5,7 @@ import tqdm
 import random
 from collections import defaultdict
 
-SPLIT_OPTIONS = ['train', 'test']
+SPLIT_OPTIONS = ["train", "test"]
 
 
 def split_dataset(data_dir: str, train_ratio: float=0.8):

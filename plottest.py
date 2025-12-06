@@ -2,7 +2,7 @@ import argparse
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-# python plottest.py --plot-acc --plot-loss "runs/20240318_232455_1726701e-8c51-4913-9137-b73753d42439/tests/stdout.log"
+
 def smooth_list(X, alpha: float = 0.9) -> list:
     """
     Apply exponential smoothing to the list values.
@@ -13,7 +13,7 @@ def smooth_list(X, alpha: float = 0.9) -> list:
         out.append(S_i)
     return out
 
-def plot_confusion_matrix(df_confusion, path, epoch, place, title='Confusion matrix', cmap=plt.cm.gray_r):
+def plot_confusion_matrix(df_confusion, path, epoch, place, title="Confusion matrix", cmap=plt.cm.gray_r):
     plt.matshow(df_confusion, cmap=cmap) # imshow
     plt.colorbar()
     tick_marks = np.arange(20)
@@ -22,7 +22,6 @@ def plot_confusion_matrix(df_confusion, path, epoch, place, title='Confusion mat
     plt.ylabel("Predicted")
     plt.xlabel("Actual")
     plt.savefig(path + "/top" + str(place) + "_test_confusion_matrix" + str(epoch+1) + ".png")
-
 
 
 if __name__=="__main__":
@@ -64,7 +63,7 @@ if __name__=="__main__":
             predicted.append([int(i) for i in line.split("[")[4][:-2].split(", ")])
         elif "Matrix:" in line:
             rows = line.split(": ")[1][0:-1]
-            rows = rows.split('[')[2:]
+            rows = rows.split("[")[2:]
             rows[-1] = rows[1][:-1] + " "
             for j in range(len(rows)):
                 rows[j] = [int(k) for k in rows[j][:-3].split(", ")]
@@ -92,7 +91,7 @@ if __name__=="__main__":
     if args.confusion_matrix:
         for i in range(int(len(matrices)/ args.top)):
             for j in range(args.top):
-                y_actu = pd.Series(actual[i], name='Actual')
-                y_pred = pd.Series(predicted[i], name='Predicted')
+                y_actu = pd.Series(actual[i], name="Actual")
+                y_pred = pd.Series(predicted[i], name="Predicted")
                 df_confusion = pd.crosstab(y_actu, y_pred)
                 plot_confusion_matrix(matrices[i*args.top + j],args.path,i,j+1)

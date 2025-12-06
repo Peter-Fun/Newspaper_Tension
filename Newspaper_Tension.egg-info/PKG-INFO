@@ -1,0 +1,314 @@
+Metadata-Version: 2.4
+Name: Newspaper_Tension
+Version: 1.0.0
+Summary: BERT sentiment analysis of GDELT News for country tension prediction
+Author: Peter
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: torch>=1.9.0
+Requires-Dist: transformers>=4.0.0
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: tqdm
+Requires-Dist: torchvision
+Requires-Dist: torchtext
+Requires-Dist: newspaper3k>=0.2.8
+Requires-Dist: requests
+Provides-Extra: dev
+Requires-Dist: pytest>=6.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=2.10.0; extra == "dev"
+Requires-Dist: black>=21.0.0; extra == "dev"
+Requires-Dist: flake8>=3.8.0; extra == "dev"
+Requires-Dist: jupyter>=1.0.0; extra == "dev"
+Requires-Dist: ipykernel>=6.0.0; extra == "dev"
+Dynamic: author
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# Newspaper Tension: GDELT Event Analysis with BERT
+
+A machine learning project that analyzes geopolitical events and tension from news articles using the GDELT (Global Database of Events, Language, and Tone) dataset and BERT transformer models for event classification.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.9+-red.svg)](https://pytorch.org/)
+
+## 🚀 Quick Start
+
+### Installation
+
+1. **Clone the repository:**
+```bash
+git clone <your-repo-url>
+cd Newspaper_Tension
+```
+
+2. **Install the package in development mode:**
+```bash
+pip install -e .
+```
+
+3. **Or install from requirements.txt:**
+```bash
+pip install -r requirements.txt
+```
+
+### Basic Usage
+
+```python
+from Newspaper_Tension import GDELT_BERT, BERT
+import transformers
+
+# Initialize tokenizer and dataset
+tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+dataset = GDELT_BERT(
+    tokenizer=tokenizer, 
+    selected_factor="EventRootCode",  # or "GoldsteinScale"
+    split="train"
+)
+
+# Initialize model
+model = BERT()
+
+# Create data loader
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=True)
+```
+
+## 📊 Project Overview
+
+This project implements a BERT-based classifier for analyzing geopolitical events from the GDELT dataset. The system can predict various event characteristics including:
+
+- **EventRootCode**: Classification of event types (20 classes)
+- **GoldsteinScale**: Goldstein scale values for conflict/cooperation measurement
+- **Other GDELT factors**: Customizable target variables
+
+### Key Features
+
+- 🤖 **BERT-based Classification**: Uses pre-trained BERT for text understanding
+- 📰 **News Article Processing**: Handles full news articles and summaries
+- 🌍 **GDELT Integration**: Built-in support for GDELT dataset format
+- 📈 **Comprehensive Metrics**: Training/testing metrics with visualization
+- 🔄 **Flexible Data Splits**: Configurable train/test splitting
+
+## 🏗️ Architecture
+
+The project consists of several key components:
+
+```
+Newspaper_Tension/
+├── dataset_bert.py      # GDELT dataset class for BERT
+├── model_bert.py        # BERT classification model
+├── train_bert.py        # Training script
+├── test_bert.py         # Testing/evaluation script
+├── utils.py            # Data loading and processing utilities
+├── constants.py        # Configuration constants
+└── common/             # Common utilities (logging, I/O)
+```
+
+### Model Architecture
+
+- **Base Model**: BERT-base-uncased (768 hidden dimensions)
+- **Classification Head**: Linear layer (768 → 20 classes)
+- **Dropout**: 0.3 for hidden layers and attention
+- **Max Sequence Length**: 512 tokens
+
+## 📁 Data Format
+
+The project expects data in the following structure:
+
+```
+dataset_root/
+├── event_folder_1/
+│   ├── split.tsv          # GDELT event metadata
+│   ├── articles/
+│   │   └── {event_id}.txt # Full news articles
+│   └── summaries/
+│       └── {event_id}.txt # Article summaries
+├── event_folder_2/
+└── ...
+```
+
+### GDELT TSV Format
+
+The `split.tsv` files should contain GDELT event data with columns including:
+- `GLOBALEVENTID`: Unique event identifier
+- `EventRootCode`: Event classification code
+- `GoldsteinScale`: Conflict/cooperation scale (-10 to +10)
+- `SPLIT`: "train" or "test" designation
+- Other GDELT columns (see `constants.py`)
+
+## 🚀 Training
+
+### Basic Training
+
+```bash
+python train_bert.py
+```
+
+### Custom Training
+
+```python
+from Newspaper_Tension.dataset_bert import GDELT_BERT
+from Newspaper_Tension.model_bert import BERT
+import transformers
+import torch
+
+# Setup
+tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
+train_dataset = GDELT_BERT(
+    tokenizer=tokenizer,
+    root_dir="/path/to/gdelt/data",
+    selected_factor="EventRootCode",
+    split="train"
+)
+
+# Training configuration
+model = BERT().cuda()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+criterion = torch.nn.CrossEntropyLoss()
+
+# Training loop
+for epoch in range(50):
+    # Your training code here
+    pass
+```
+
+## 📊 Evaluation Metrics
+
+The project supports comprehensive evaluation including:
+
+### Basic Metrics
+- Cross Entropy Loss
+- Top-1, Top-2, Top-5 Accuracy
+- Per-class Precision and Recall
+- Confusion Matrix
+
+### Advanced Metrics
+- Per-class mAP (mean Average Precision)
+- F1 Scores by class
+- Sample predictions with probabilities
+
+### Visualization
+
+Generate training plots and confusion matrices:
+
+```python
+# Example plotting (implement in your evaluation script)
+import matplotlib.pyplot as plt
+
+# Loss and accuracy plots
+plt.plot(train_losses, label="Training Loss")
+plt.plot(test_losses, label="Testing Loss")
+plt.legend()
+plt.show()
+```
+
+## ⚙️ Configuration
+
+### Data Paths
+
+Update the data paths in your code or `constants.py`:
+
+```python
+# In constants.py
+DEFAULT_DOWNLOAD_DIR = "/path/to/your/gdelt/data"
+DEFAULT_GDELT_BASE_URL = "http://data.gdeltproject.org/events"
+```
+
+### Model Parameters
+
+Key parameters in `dataset_bert.py`:
+
+```python
+gdelt_dataset = GDELT_BERT(
+    tokenizer=tokenizer,
+    root_dir="/path/to/data",           # Data directory
+    selected_factor="EventRootCode",     # Target variable
+    split="train",                       # "train" or "test"
+    max_length=512,                      # Max sequence length
+    show_progress=True                   # Progress bars
+)
+```
+
+## 📋 Requirements
+
+- Python 3.8+
+- PyTorch 1.9+
+- Transformers 4.0+
+- pandas, numpy, matplotlib
+- tqdm, newspaper3k
+
+See `requirements.txt` for complete dependencies.
+
+## 🔧 Development
+
+### Development Installation
+
+```bash
+pip install -e ".[dev]"
+```
+
+### Running Tests
+
+```bash
+pytest tests/
+```
+
+### Code Formatting
+
+```bash
+black Newspaper_Tension/
+flake8 Newspaper_Tension/
+```
+
+## 📚 References
+
+- [GDELT Project](https://www.gdeltproject.org/)
+- [BERT Paper](https://arxiv.org/abs/1810.04805)
+- [Transformers Library](https://huggingface.co/transformers/)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m "Add amazing feature"`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Contact
+
+- **Author**: Your Name
+- **Email**: your.email@example.com
+- **Project Link**: [https://github.com/yourusername/newspaper-tension](https://github.com/yourusername/newspaper-tension)
+
+---
+
+## Legacy Development Notes
+
+### Baseline Run Reference
+Baseline Run: 20240318_232455_1726701e-8c51-4913-9137-b73753d42439
+- Spend 30 minutes looking for existing papers/number on same task (GDELT CAMEO Event group prediction).
+
+
+## (4) Further Steps:
+- Temporal 80:20 split for training / testing.
+- Using article features to traing a temporal model.
+
+## Stuff to do:
+- Rerun training process with multiple random splits. Create average for all values + stardard dev.
+
+
+
+
+

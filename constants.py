@@ -1,5 +1,5 @@
-DEFAULT_GDELT_BASE_URL = 'http://data.gdeltproject.org/events'
-DEFAULT_DOWNLOAD_DIR = '/data_drive/GDELT/'
+DEFAULT_GDELT_BASE_URL = "http://data.gdeltproject.org/events"
+DEFAULT_DOWNLOAD_DIR = "SET_YOUR_DOWNLOAD_DIRECTORY_HERE"
 DEFAULT_COLUMN_LABELS = [
     "GLOBALEVENTID",
     "SQLDATE",

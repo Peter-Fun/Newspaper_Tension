@@ -14,10 +14,10 @@ from Newspaper_Tension.constants import DEFAULT_COLUMN_LABELS, DEFAULT_DOWNLOAD_
 from Newspaper_Tension.utils import load_GDELT_tsv
 from common.logging import setup_logging, getlogger
 
-SPLIT_OPTIONS = ['train', 'test']
+SPLIT_OPTIONS = ["train", "test"]
 SPLIT_WEIGHTS = [0.8, 0.2]
 
-logger = getlogger("ISEF_Training")
+logger = getlogger("Newspaper_Tension_Training")
 
 class GDELT_BERT(Dataset):
     """
@@ -44,7 +44,7 @@ class GDELT_BERT(Dataset):
         self.progress = show_progress
         if split:
             assert split in SPLIT_OPTIONS
-        self._root_dir = root_dir or os.path.abspath("/home/peter/data/GDELT_large")
+        self._root_dir = root_dir or os.path.abspath("INSERT_GDELT_DATASET_PATH_HERE")
         self.selected_factor = selected_factor # chosen factor to predict based on given article
         self.split = split or "train"
         logger.info("Finding TSVs...")
@@ -126,7 +126,7 @@ class GDELT_BERT(Dataset):
         text, summary, label, s = self.data[idx, :]
 
         inputs = self.tokenizer.encode_plus(text, None,
-            padding='max_length',
+            padding="max_length",
             pad_to_max_length=True,
             add_special_tokens=True,
             return_attention_mask=True,
@@ -162,7 +162,7 @@ class GDELT_BERT(Dataset):
             if text.shape[0] > longest_length:
                 longest_length = text.shape[0]
 
-        # Use a tensor to contain the batch's text, padding the shorter texts
+        # Use a tensor to contain the batch"s text, padding the shorter texts
         batch_texts = torch.zeros((batch_size, longest_length), dtype=int)
         batch_summaries = torch.zeros((batch_size, longest_length), dtype=int)
         batch_labels = torch.zeros((batch_size,), dtype=int)

@@ -1,7 +1,6 @@
 import argparse
 import matplotlib.pyplot as plt
 
-
 def smooth_list(X, alpha: float = 0.9) -> list:
     """
     Apply exponential smoothing to the list values.

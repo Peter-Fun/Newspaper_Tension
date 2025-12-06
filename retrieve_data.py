@@ -226,13 +226,3 @@ if __name__=="__main__":
             os.path.join("/data_drive", "GDELT", f"{acttwo}_{actone}".replace(" ", "-")),
             subsample=subsample_val
         )
-
-
-        
-        
-
-        
-
-
-
-

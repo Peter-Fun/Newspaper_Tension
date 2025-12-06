@@ -15,14 +15,7 @@ chpt_folder = os.path.join(run_folder, "checkpoints")
 os.mkdir(run_folder)
 os.mkdir(chpt_folder)
 setup_logging(output_dir=run_folder)
-logger = getlogger("ISEF_Training")
-
-"""
-TODO (Peter):
-1. Use the summaries instead.
-2. Try running on full dataset.
-3. Change into Classification Task.
-"""
+logger = getlogger("Newspaper_Tension_Training")
 
 tokenizer = transformers.BertTokenizer.from_pretrained("bert-base-uncased")
 gdelt_train = GDELT_BERT(tokenizer=tokenizer, selected_factor = "EventRootCode", split="train") #https://mind-node.net/cameo-event-codes/
@@ -55,10 +48,10 @@ for epoch in range(50):
     for sample_batch in tqdm.tqdm(train_loader, disable=True):
         i += 1
         # Split apart and prepare the sample batch
-        ids = sample_batch['ids'].type(torch.LongTensor).cuda()
-        token_type_ids = sample_batch['token_type_ids'].type(torch.LongTensor).cuda()
-        mask = sample_batch['mask'].cuda()
-        label = sample_batch['target']
+        ids = sample_batch["ids"].type(torch.LongTensor).cuda()
+        token_type_ids = sample_batch["token_type_ids"].type(torch.LongTensor).cuda()
+        mask = sample_batch["mask"].cuda()
+        label = sample_batch["target"]
         label = label.type(torch.LongTensor).cuda()
 
         optimizer.zero_grad()

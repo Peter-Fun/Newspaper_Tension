@@ -21,7 +21,7 @@ def open_checkpoint_file(path: str):
     Return the contents of the checkpoint file.
     """
     contents = torch.load(path)
-    return contents['epoch'], contents['model_state_dict'], contents['optimizer_state_dict'], contents['loss'], contents["acc"]
+    return contents["epoch"], contents["model_state_dict"], contents["optimizer_state_dict"], contents["loss"], contents["acc"]
 
 def load_checkpoint(model, optimizer, ckpt_folder, epoch):
     ckpt_files = io.find_files_in(ckpt_folder)
@@ -33,7 +33,7 @@ def load_checkpoint(model, optimizer, ckpt_folder, epoch):
     return start_epoch, model, optimizer, loss, acc
 
 if __name__=="__main__":
-    run_name = "20240615_175636_7212708a-1898-40b3-b3ae-46a470d1b97f"
+    run_name = "INSERT_RUN_NAME_HERE"
     run_folder = os.path.join("runs", run_name)
     chpt_folder = os.path.join(run_folder, "checkpoints")
     test_folder = os.path.join(run_folder, "tests")
@@ -41,7 +41,7 @@ if __name__=="__main__":
     os.mkdir(test_folder)
 
     setup_logging(output_dir=test_folder)
-    logger = getlogger("ISEF_Training")
+    logger = getlogger("Newspaper_Tension_Training")
 
     parser = argparse.ArgumentParser(description="do a test run on the checkpoints")
     parser.add_argument("top", type=int, help="determine the success of the model by predicted within the top _")
@@ -83,10 +83,10 @@ if __name__=="__main__":
         for sample_batch in tqdm.tqdm(test_loader, disable=True):
             i += 1
             # Split apart and prepare the sample batch
-            ids = sample_batch['ids'].type(torch.LongTensor).cuda()
-            token_type_ids = sample_batch['token_type_ids'].type(torch.LongTensor).cuda()
-            mask = sample_batch['mask'].cuda()
-            label = sample_batch['target']
+            ids = sample_batch["ids"].type(torch.LongTensor).cuda()
+            token_type_ids = sample_batch["token_type_ids"].type(torch.LongTensor).cuda()
+            mask = sample_batch["mask"].cuda()
+            label = sample_batch["target"]
             label = label.type(torch.LongTensor).cuda()
             batch_acc = 0
 
